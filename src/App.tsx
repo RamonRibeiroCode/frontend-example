@@ -1,9 +1,16 @@
-function App() {
+import { BrowserRouter } from "react-router-dom";
+
+import Routes from "./routes";
+import { AuthProvider } from "./contexts/auth";
+
+const App = () => {
   return (
-    <div>
-      <h1>Ola Mundo!</h1>
-    </div>
+    <BrowserRouter>
+      <AuthProvider>
+        <Routes />
+      </AuthProvider>
+    </BrowserRouter>
   );
-}
+};
 
 export default App;
