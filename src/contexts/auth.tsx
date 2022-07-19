@@ -1,13 +1,20 @@
 import { createContext, useState, useEffect, ReactNode } from "react";
 import api from "../services/api";
-import { signin } from "../services/user";
+import { login, register } from "../services/user";
 import { useNavigate } from "react-router-dom";
 
 interface AuthContext {
   signed: boolean;
   loading: boolean;
   user: User;
-  handleSignin: (email: string, password: string) => Promise<void>;
+  handleRegister: (
+    email: string,
+    firstName: string,
+    lastName: string,
+    password: string,
+    age: number
+  ) => Promise<void>;
+  handleLogin: (email: string, password: string) => Promise<void>;
   handleLogout: () => void;
 }
 
@@ -29,8 +36,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const navigate = useNavigate();
 
-  const handleSignin = async (email: string, password: string) => {
-    const user = await signin(email, password);
+  const handleRegister = async (
+    email: string,
+    firstName: string,
+    lastName: string,
+    password: string,
+    age: number
+  ) => {
+    await register(email, firstName, lastName, password, age);
+    await handleLogin(email, password);
+  };
+
+  const handleLogin = async (email: string, password: string) => {
+    const user = await login(email, password);
 
     setSigned(true);
     setUser(user);
@@ -69,7 +87,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         signed: signed,
         loading: loading,
         user,
-        handleSignin,
+        handleRegister,
+        handleLogin,
         handleLogout,
       }}
     >

@@ -1,6 +1,6 @@
 import api from "./api";
 
-interface SigninResponse {
+interface LoginResponse {
   token: string;
   user: User;
 }
@@ -10,8 +10,8 @@ interface User {
   email: string;
 }
 
-export async function signin(email: string, password: string) {
-  const response = await api.post<SigninResponse>("/sessions", {
+export async function login(email: string, password: string) {
+  const response = await api.post<LoginResponse>("/sessions", {
     email: email,
     password: password,
   });
@@ -25,4 +25,20 @@ export async function signin(email: string, password: string) {
   localStorage.setItem("token", token);
 
   return user;
+}
+
+export async function register(
+  email: string,
+  firstName: string,
+  lastName: string,
+  password: string,
+  age: number
+) {
+  await api.post("/users/create", {
+    email,
+    firstName,
+    lastName,
+    password,
+    age,
+  });
 }
